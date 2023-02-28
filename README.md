@@ -1,4 +1,4 @@
-# discnarok
+# DiscNarok
 
 Discnarok is a bot designed to automate the purging of members from a Discord server, primarily based on when they joined and a role they would have received or not.
 

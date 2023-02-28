@@ -21,4 +21,6 @@
     "dotenv": "^16.0.3"
   },
   "devDependencies": {
-    "
+    "eslint": "^8.35.0"
+  }
+}
