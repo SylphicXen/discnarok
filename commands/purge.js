@@ -1,5 +1,6 @@
 const { ModalBuilder } = require("@discordjs/builders");
-const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits, Guild, ThreadChannel } = require("discord.js");
+const { fips } = require("node:crypto");
 const wait = require('node:timers/promises').setTimeout;
 
 
@@ -19,14 +20,41 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers), // While I could do those with kick permissions, in theory this command should only be ran by those with the power to ban members.
 
     async execute(interaction) {
-        const role = interaction.options.getRole('role');
-        const days = interaction.options.getInteger('days') ?? 30;
+        const purgeRole = interaction.options.getRole('role');
+        const purgeDays = interaction.options.getInteger('days') ?? 30;
 
+        // Send the initial reply.
 
+        await interaction.reply({ content: `Checking for users without the role ${purgeRole.name}.` });
 
-        await interaction.reply({ content: `This would have purged people without ${role.name} who were here for longer than ${days} days.`, ephemeral: true });
-        await wait(1000);
-        await interaction.followUp({ content: `However, the bot is not yet done, so that won't be happening.`, ephemeral: true });
+        // Now that we have that, we need to get the members in question.
+
+        await interaction.guild.members.fetch();
+
+        originalMemberList = await interaction.guild.members.cache.filter(member => !member.roles.cache.has(purgeRole.id));
+
+        // Now that we have the members, we need to check how long they have been in the server.
+
+        finalCount = 0;
+
+        // There are 86400000 milliseconds in a day.
+
+        currentEpochDay = Date.now() / 86400000;
+        targetEpochDay = currentEpochDay - purgeDays;
+
+        await console.log(`Current epoch day is ${currentEpochDay}`);
+
+        await originalMemberList.forEach(member => {
+            joinTime = member.joinedAt.getTime();
+            joinTimeInDays = joinTime / 86400000;
+
+            if(joinTimeInDays > targetEpochDay){
+                finalCount++;
+                console.log(`User ${member.user.username} joined less than ${purgeDays} days ago.`);
+            }
+        });
+        
+        interaction.followUp(`Of the ${originalMemberList.size} members without the role, ${finalCount} joined within ${purgeDays} days.`);
+        
     },
-
 };
