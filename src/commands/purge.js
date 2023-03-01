@@ -65,6 +65,9 @@ module.exports = {
                     interaction.followUp(`User ${member} *would* have been kicked, but kicking is set to **false**.`);
                 }
             }
+
+            wait(600);
+
         });
         
         interaction.followUp(`Of the ${originalMemberList.size} members without the role, ${finalCount} joined over ${purgeDays} days ago.\nKicking was set to **${kickBool}**.`);
