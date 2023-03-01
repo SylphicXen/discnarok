@@ -57,8 +57,10 @@ module.exports = {
                 finalCount++;
                 console.log(`User ${member.user.username} joined more than ${purgeDays} days ago.`);
                 if (kickBool) {
-                    member.kick(`Kicked by Discnarok for not having role ${purgeRole.name} for over ${purgeDays} days`)
                     interaction.followUp(`User ${member} has been kicked! Reason:\nKicked by Discnarok for not having role ${purgeRole.name} for over ${purgeDays} days`);
+                    member.kick(`Kicked by Discnarok for not having role ${purgeRole.name} for over ${purgeDays} days`).catch(
+                        console.error,
+                        interaction.followUp(`Failed to kick user ${member}! Does the bot have the correct permissions?`)); 
                 }
                 else {
                     interaction.followUp(`User ${member} *would* have been kicked, but kicking is set to **false**.`);
