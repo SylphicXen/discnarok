@@ -27,6 +27,7 @@ module.exports = {
         const purgeRole = interaction.options.getRole('role');
         const purgeDays = interaction.options.getInteger('days') ?? 30;
         const kickBool = interaction.options.getBoolean('kick') ?? false;
+        const interactionCallerID = interaction.user.id;
 
         // Send the initial reply.
 
@@ -70,6 +71,6 @@ module.exports = {
 
         });
         
-        interaction.followUp(`Of the ${originalMemberList.size} members without the role, ${finalCount} joined over ${purgeDays} days ago.\nKicking was set to **${kickBool}**.`);
+        interaction.followUp(`<@${interactionCallerID}> All done!\nOf the ${originalMemberList.size} members without the role, ${finalCount} joined over ${purgeDays} days ago.\nKicking was set to **${kickBool}**.`);
     },
 };
