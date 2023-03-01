@@ -30,7 +30,7 @@ module.exports = {
 
         // Send the initial reply.
 
-        await interaction.reply({ content: `Checking for users without the role ${purgeRole.name}.` });
+        await interaction.reply({ content: `Checking for users without the role ${purgeRole.name} who have been in the server for more than ${purgeDays} days.` });
 
         // Now that we have that, we need to get the members in question.
 
