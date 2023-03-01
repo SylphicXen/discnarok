@@ -16,7 +16,7 @@ const internal = require('node:stream');
 // Further requirements
 
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences] });
 
 // Setting up command handling
 
@@ -62,8 +62,6 @@ client.on(Events.InteractionCreate, async interaction => {
             await interaction.reply({ content: `There was an error while executing this command!`, ephemeral: true })
         }
     }
-
-    console.log(interaction);
 });
 
 
