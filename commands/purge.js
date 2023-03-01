@@ -36,7 +36,7 @@ module.exports = {
 
         await interaction.guild.members.fetch();
 
-        originalMemberList = await interaction.guild.members.cache.filter(member => !member.roles.cache.has(purgeRole.id));
+        originalMemberList = interaction.guild.members.cache.filter(member => !member.roles.cache.has(purgeRole.id));
 
         // Now that we have the members, we need to check how long they have been in the server.
 
@@ -47,9 +47,9 @@ module.exports = {
         currentEpochDay = Date.now() / 86400000;
         targetEpochDay = currentEpochDay - purgeDays;
 
-        await console.log(`Current epoch day is ${currentEpochDay}`);
+        console.log(`Current epoch day is ${currentEpochDay}`);
 
-        await originalMemberList.forEach(member => {
+        originalMemberList.forEach(member => {
             joinTime = member.joinedAt.getTime();
             joinTimeInDays = joinTime / 86400000;
 
@@ -59,8 +59,7 @@ module.exports = {
                 if (kickBool) {
                     interaction.followUp(`User ${member} has been kicked! Reason:\nKicked by Discnarok for not having role ${purgeRole.name} for over ${purgeDays} days`);
                     member.kick(`Kicked by Discnarok for not having role ${purgeRole.name} for over ${purgeDays} days`).catch(
-                        console.error,
-                        interaction.followUp(`Failed to kick user ${member}! Does the bot have the correct permissions?`)); 
+                        console.error); 
                 }
                 else {
                     interaction.followUp(`User ${member} *would* have been kicked, but kicking is set to **false**.`);

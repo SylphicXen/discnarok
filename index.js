@@ -11,7 +11,7 @@ require('dotenv').config()
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Events, GatewayIntentBits, SlashCommandBuilder, Collection } = require('discord.js');
-const internal = require('node:stream');
+// const internal = require('node:stream');
 
 // Further requirements
 
