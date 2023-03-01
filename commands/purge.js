@@ -17,11 +17,16 @@ module.exports = {
             option 
                 .setName('days')
                 .setDescription('How many days the user must be in the server to be purged'))
+        .addBooleanOption(option =>
+            option
+                .setName('kick')
+                .setDescription('Should it kick these members? If not, it will list them out.'))
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers), // While I could do those with kick permissions, in theory this command should only be ran by those with the power to ban members.
 
     async execute(interaction) {
         const purgeRole = interaction.options.getRole('role');
         const purgeDays = interaction.options.getInteger('days') ?? 30;
+        const kickBool = interaction.options.getBoolean('kick') ?? false;
 
         // Send the initial reply.
 
@@ -48,13 +53,19 @@ module.exports = {
             joinTime = member.joinedAt.getTime();
             joinTimeInDays = joinTime / 86400000;
 
-            if(joinTimeInDays > targetEpochDay){
+            if(joinTimeInDays < targetEpochDay){
                 finalCount++;
-                console.log(`User ${member.user.username} joined less than ${purgeDays} days ago.`);
+                console.log(`User ${member.user.username} joined more than ${purgeDays} days ago.`);
+                if (kickBool) {
+                    member.kick(`Kicked by Discnarok for not having role ${purgeRole.name} for over ${purgeDays} days`)
+                    interaction.followUp(`User ${member} has been kicked! Reason:\nKicked by Discnarok for not having role ${purgeRole.name} for over ${purgeDays} days`);
+                }
+                else {
+                    interaction.followUp(`User ${member} *would* have been kicked, but kicking is set to **false**.`);
+                }
             }
         });
         
-        interaction.followUp(`Of the ${originalMemberList.size} members without the role, ${finalCount} joined within ${purgeDays} days.`);
-        
+        interaction.followUp(`Of the ${originalMemberList.size} members without the role, ${finalCount} joined over ${purgeDays} days ago.\nKicking was set to **${kickBool}**.`);
     },
 };
